@@ -10,3 +10,6 @@ The project is running here -> https://cdn.rawgit.com/Orsucciu/ShantaeDance/mast
 
 update - 01/07/2016 -
 For now, shantae is just dancing. The goal is to add music.
+
+update - 03/07/2016 -
+The code is really messy, and has to be optimized so i can actually use it. working on that
