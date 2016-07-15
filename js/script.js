@@ -30,6 +30,8 @@
 		shantaeImage,
 		canvas;	
 	var arrow = "None"; //the pressed key will be stored here
+	var loop = false; //this variable will tell if the animation has looped or not
+	var newAnimation = false; //this will be to reset the index and prevent the animation change to bug
 
 	function gameLoop () { //the gameloop, updating and rendering the sprite forever
 	
@@ -40,7 +42,10 @@
 	
 	  shantae.update();  //jumps to the "update" function
 	  shantae.render();
-	  arrow = "None";
+	  if (loop == true){
+		arrow = "None";
+		loop = false;
+	  }
 	}
 	
 	function checkKey(e) { //function for arrow keys
@@ -69,12 +74,19 @@
 		else if (e.keyCode == '110'){
 		//decimal point	
 		}
-		console.log("key pressed !");
+		
+		newAnimation = true;
+		//console.log("key pressed !");
 	}
 	
 	function sprite (options) {  //sprite constructor - where the magic happens -
 		//var position = [16, 58, 104, 154, 202, 259, 321, 376, 437, 492, 555, 632, 710, 777, 858, 916]; //this is the x positions of our sprite (as the y is supposed to always be the same)
-		var position = [ [[16, 58, 104, 154, 202, 259, 321, 376, 437, 492, 555, 632, 710, 777, 858, 916], [218]] ];  //here's the big-ass array with ALL the x and y positions inside
+		var position = [ [[16, 58, 104, 154, 202, 259, 321, 376, 437, 492, 555, 632, 710, 777, 858, 916], [218]], 
+						 [[14, 56, 102, 152, 200, 257, 319, 374, 435, 490, 553, 630, 708, 775, 856, 914], [261]], 
+						 [[14, 56, 102, 152, 200, 257, 319, 374, 435, 490, 553, 630, 708, 775, 856, 914], [304]],
+						 [[14, 56, 102, 152, 200, 257, 319, 374, 435, 490, 553, 630, 708, 775, 856, 914], [346]],
+						 [[14, 56, 102, 152, 200, 257, 319, 374, 435, 490, 553, 630, 708, 775, 856, 914], [388]]
+						 ];  //here's the big-ass array with ALL the x and y positions inside
 																													//i guess it's going to be a terrible mess, but it seemed like a good solution so i won't have to make an array for every position
 			
 		var that = {},
@@ -92,6 +104,11 @@
 		that.update = function () { //update function of the sprite object
 									//keep up the "frames" count, to know where we are
             tickCount += 1;
+			
+			if (newAnimation == true){
+				tickCount = 0;
+				newAnimation = false;
+			}
 
             if (tickCount > ticksPerFrame) {
 
@@ -103,6 +120,7 @@
                     frameIndex += 1;
                 } else {
                     frameIndex = 0;
+					loop = true;
                 }
             }
         };
@@ -155,6 +173,7 @@
 			);
 			/** **/
 			line.draw();
+			hor.draw();
 			/** 
 			console.log("that.width : " + that.width);
 			console.log("frame index : " + frameIndex );
@@ -176,8 +195,10 @@
 	/**  here, i create a red line, that will be used to check the correct alignement **/
 	var ctx = canvas.getContext('2d');
 	var line = new Line(ctx);
+	var hor = new LineHorizont(ctx);
 	ctx.strokeStyle = '#D32F2F';
-	
+
+//the 2 next functions are just for debugging purposes	
 function Line(ctx) { //this allow the creation of "Line" objects
     
     var me = this;
@@ -196,6 +217,22 @@ function Line(ctx) { //this allow the creation of "Line" objects
     }
 }	
 
+function LineHorizont(ctx){
+	
+	var me = this;
+    
+    this.x1 = canvas.width;
+    this.x2 = 10;
+    this.y1 = 40;
+    this.y2 = 40;
+    
+    this.draw = function() {
+        ctx.beginPath();
+        ctx.moveTo(me.x1, me.y1);
+        ctx.lineTo(me.x2, me.y2);
+        ctx.stroke();
+    }
+}
 	// Create sprite sheet
 	shantaeImage = new Image();	
 	
