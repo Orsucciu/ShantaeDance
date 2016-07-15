@@ -13,3 +13,6 @@ For now, shantae is just dancing. The goal is to add music.
 
 update - 03/07/2016 -
 The code is really messy, and has to be optimized so i can actually use it. working on that
+
+update - 15/07/2016 -
+Still messy code (i'll stop saying that from now on), shantae can now change depending on keyboard press. THe correct positions still have to be added 
