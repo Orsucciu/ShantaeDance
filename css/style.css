@@ -6,3 +6,7 @@ canvas {
   image-rendering: pixelated;
   image-rendering: crisp-edges;
 }
+
+body {
+	overflow: hidden; /* this prevent any form of scrolling, which is ugly */
+}

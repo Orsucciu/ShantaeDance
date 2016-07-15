@@ -28,30 +28,55 @@
 			
 	var shantae,  //here are declared the variables
 		shantaeImage,
-		canvas;					
+		canvas;	
+	var arrow = "None"; //the pressed key will be stored here
 
 	function gameLoop () { //the gameloop, updating and rendering the sprite forever
 	
 	  window.requestAnimationFrame(gameLoop);
-	  
-	  
+	 
 	// Handle keyboard controls
-	var keysDown = {};
-
-	addEventListener("keydown", function (e) {
-		keysDown[e.keyCode] = true;
-	}, false);
-
-	addEventListener("keyup", function (e) {
-		delete keysDown[e.keyCode];
-	}, false);
-
+	document.onkeydown = checkKey;
+	
 	  shantae.update();  //jumps to the "update" function
 	  shantae.render();
+	  arrow = "None";
+	}
+	
+	function checkKey(e) { //function for arrow keys
+
+		e = e || window.event;
+
+		if (e.keyCode == '38') {
+        // up arrow
+		arrow = "Up";
+		}
+		else if (e.keyCode == '40') {
+        // down arrow
+		arrow = "Down";
+		}
+		else if (e.keyCode == '37') {
+		// left arrow
+		arrow = "Left";
+		}
+		else if (e.keyCode == '39') {
+		// right arrow
+		arrow = "Right";
+		}
+		else if (e.keyCode == '96') {
+		//numpad0	
+		}
+		else if (e.keyCode == '110'){
+		//decimal point	
+		}
+		console.log("key pressed !");
 	}
 	
 	function sprite (options) {  //sprite constructor - where the magic happens -
-		var position = [16, 58, 104, 154, 202, 259, 321, 376, 437, 492, 555, 632, 710, 777, 858, 916]; //this is the x positions of our sprite (as the y is supposed to always be the same)
+		//var position = [16, 58, 104, 154, 202, 259, 321, 376, 437, 492, 555, 632, 710, 777, 858, 916]; //this is the x positions of our sprite (as the y is supposed to always be the same)
+		var position = [ [[16, 58, 104, 154, 202, 259, 321, 376, 437, 492, 555, 632, 710, 777, 858, 916], [218]] ];  //here's the big-ass array with ALL the x and y positions inside
+																													//i guess it's going to be a terrible mess, but it seemed like a good solution so i won't have to make an array for every position
+			
 		var that = {},
 			frameIndex = 0,
 			tickCount = 0,
@@ -86,13 +111,39 @@
 		  // Clear the canvas
 		  that.context.clearRect(0, 0, that.width, that.height);
 		  
+		  var direction; //every time we render the sprite, we check for pressed keys (and react in consequence)
+			switch (arrow){
+				case "None":
+					direction = 0;
+					break;
+			
+				case "Up":
+					direction = 1;
+					break;
+			
+				case "Down":
+					direction = 2;
+					break;
+			
+				case "Left":
+					direction = 3;
+					break;
+			
+				case "Right":
+					direction = 4;
+					break;
+			}
+		
+		//console.log("Direction = " + direction); //those two lines are for debugging purposes
+		//console.log("Arrow = " + arrow);
+		
 		  // Draw the animation
 		  that.context.drawImage(
 		    that.image,
 		    //frameIndex * that.width / numberOfFrames,
 			//0 + frameIndex * 25,
-			position[frameIndex],
-		    218,
+			position[direction][0][frameIndex], //here's the x from the spritesheet
+		    position[direction][1], //here's the y from the spritesheet
 		    //that.width / numberOfFrames, //the length of the square
 			30,
 			//that.height,
@@ -116,6 +167,7 @@
 	
 	// Get canvas
 	canvas = document.getElementById("shantae_main");
+	canvas.tabIndex = 1;
 	canvas.width = 100;
 	canvas.height = 100;
 	canvas.webkitImageSmoothingEnabled = false;
